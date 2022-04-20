@@ -33,14 +33,14 @@ public class ListDTO {
     }
 
     public String[] getTypes(){
-        if (type == null) {
+        if (type == null || type.trim().length() == 0) {
             return new String[]{};
         }
         return type.split("");
     }
 
     public String getKeyword(){
-        return keyword == null? null : keyword.trim();
+        return keyword == null || keyword.trim().length() == 0 ? null : keyword.trim();
     }
 
     public void setPage(int page) {
