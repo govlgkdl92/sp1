@@ -68,6 +68,32 @@ ${listDTO}
 
 <script>
 
+
+    const linkDiv = document.querySelector(".pagination")
+    //console.log(linkTage)
+    const actionForm = document.querySelector(".actionForm")
+
+    linkDiv.addEventListener("click", (e) => {
+        e.stopPropagation()
+        e.preventDefault()
+
+        const target = e.target
+
+        if(target.getAttribute("class") !== 'page-link'){ //page 링크가 아니면 끝내기
+            return
+        }
+
+        const pageNum = target.getAttribute("href")
+        //alert(pageNum) //경고창은 위험하므로 웬만하면 하지 말자.
+        actionForm.querySelector("input[name='page']").value = pageNum
+        actionForm.submit();
+
+    }, false)
+      // ↑ 버블링만 할 거다. 캡쳐링을 false다 라는 뜻
+
+
+
+    /* 예전 스타일  for루프.. 별로...
     const linkTage = document.querySelectorAll(".page-link")
     //console.log(linkTage)
     const actionForm = document.querySelector(".actionForm")
@@ -85,7 +111,7 @@ ${listDTO}
             actionForm.querySelector("input[name='page']").value = pageNum;
             actionForm.submit()
         }, false)
-    }
+    }*/
 
 
     //서치
