@@ -20,15 +20,16 @@
     <button class="searchBtn">Search</button>
 </div>
 
-<ul>
+<ul class="dtoList">
     <c:forEach items="${dtoList}" var="board">
         <li>
             <span> ${board.bno}</span>
-            <span><a href='/board/read${listDTO.link}&bno=${board.bno}'>${board.title}</a></span>
+            <span><a href='/board/read/${board.bno}' class="dtoLink">${board.title}</a></span>
+            <%-- ↓ 예전 방식 --%>
+           <%-- <span><a href='/board/read/${listDTO.link}&bno=${board.bno}'>${board.title}</a></span>--%>
             <span> ${board.writer}</span>
         </li>
     </c:forEach>
-
 </ul>
 
 ${pageMaker}
@@ -73,6 +74,22 @@ ${listDTO}
     //console.log(linkTage)
     const actionForm = document.querySelector(".actionForm")
 
+    // 만약 jquery 사용한다면 순수하게 돔을 쓰는게 아니라 함수를 통해 돔으로 간다 그래서 상대적으로 느릴 수 있음
+    document.querySelector(".dtoList").addEventListener("click", (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        if(target.getAttribute("class").indexOf('dtoLink') < 0 ){
+            return                  // class 는 이름이 길어질 수 있으므로 indexOf 그 안에 dtoLink가 있는 지 확인 하는 방식으로 가야함.
+        }
+        const url = target.getAttribute("href")
+
+        actionForm.setAttribute("action", url)
+        actionForm.submit()
+    }, false)
+
+
     linkDiv.addEventListener("click", (e) => {
         e.stopPropagation()
         e.preventDefault()
@@ -86,32 +103,12 @@ ${listDTO}
         const pageNum = target.getAttribute("href")
         //alert(pageNum) //경고창은 위험하므로 웬만하면 하지 말자.
         actionForm.querySelector("input[name='page']").value = pageNum
+        actionForm.setAttribute("action","/board/list")
         actionForm.submit();
 
     }, false)
       // ↑ 버블링만 할 거다. 캡쳐링을 false다 라는 뜻
 
-
-
-    /* 예전 스타일  for루프.. 별로...
-    const linkTage = document.querySelectorAll(".page-link")
-    //console.log(linkTage)
-    const actionForm = document.querySelector(".actionForm")
-
-    //
-    for(const tag of linkTage){
-        //console.log(tag)
-        tag.addEventListener("click",(e) => {
-            e.preventDefault();
-            //console.log(tag.href)
-            //console.log(tag.getAttribute("href"))
-
-            const pageNum = tag.getAttribute("href") //페이지 번호
-
-            actionForm.querySelector("input[name='page']").value = pageNum;
-            actionForm.submit()
-        }, false)
-    }*/
 
 
     //서치
@@ -122,12 +119,12 @@ ${listDTO}
 
         console.log(type, keyword)
 
+        actionForm.setAttribute("action","/board/list")
         actionForm.querySelector("input[name='page']").value = 1
         actionForm.querySelector("input[name='type']").value = type
         actionForm.querySelector("input[name='keyword']").value = keyword
         actionForm.submit()
     },false)
-
 
     /* java script에서 배열을 루프 돌리는 법 */
 
@@ -144,3 +141,29 @@ ${listDTO}
 </script>
 </body>
 </html>
+
+
+
+
+
+
+<%--
+예전 스타일  for루프.. 별로...
+const linkTage = document.querySelectorAll(".page-link")
+//console.log(linkTage)
+const actionForm = document.querySelector(".actionForm")
+
+//
+for(const tag of linkTage){
+//console.log(tag)
+tag.addEventListener("click",(e) => {
+e.preventDefault();
+//console.log(tag.href)
+//console.log(tag.getAttribute("href"))
+
+const pageNum = tag.getAttribute("href") //페이지 번호
+
+actionForm.querySelector("input[name='page']").value = pageNum;
+actionForm.submit()
+}, false)
+} --%>

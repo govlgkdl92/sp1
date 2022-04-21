@@ -22,6 +22,14 @@ public class BoardController {
 
     private final BoardService service;
 
+    @GetMapping("/read/{bno}")
+    public String read(@PathVariable("bno") Long bno, ListDTO listDTO, Model model){
+        log.info("==========bno: "+bno);
+        log.info("======listDTO: "+listDTO);
+
+        return "/board/read";
+    }
+
     @GetMapping("/") //공백으로 놔도 됨.
     public String basic(){
         return "redirect:/board/list";
