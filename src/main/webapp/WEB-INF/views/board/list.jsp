@@ -23,11 +23,11 @@
 <ul class="dtoList">
     <c:forEach items="${dtoList}" var="board">
         <li>
-            <span> ${board.bno}</span>
-            <span><a href='/board/read/${board.bno}' class="dtoLink">${board.title}</a></span>
+            <span>${board.bno}</span>
+            <span><a href='/board/read/${board.bno}' class="dtoLink"><c:out value="${board.title}"/></a></span>
             <%-- ↓ 예전 방식 --%>
            <%-- <span><a href='/board/read/${listDTO.link}&bno=${board.bno}'>${board.title}</a></span>--%>
-            <span> ${board.writer}</span>
+            <span><c:out value="${board.writer}"/></span>
         </li>
     </c:forEach>
 </ul>
@@ -135,7 +135,7 @@ ${listDTO}
     console.log(result)
 
     if(result !== ''){
-        alert("등록 완료")
+        alert("처리되었습니다.")
     }
 
 </script>

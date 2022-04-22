@@ -20,14 +20,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardService service;
+    private final BoardService boardService;
 
+    //@GetMapping({"/read/{bno}", "/modify/{bno}"})   ->이렇게 시도해보기
     @GetMapping("/read/{bno}")
-    public String read(@PathVariable("bno") Long bno, ListDTO listDTO, Model model){
+    public String read(@PathVariable("bno") Integer bno, ListDTO listDTO, Model model){
         log.info("==========bno: "+bno);
         log.info("======listDTO: "+listDTO);
 
+        model.addAttribute("dto", boardService.getOne(bno));
+
         return "/board/read";
+    }
+
+    @GetMapping( "/modify/{bno}")
+    public String modify(@PathVariable("bno") Integer bno, ListDTO listDTO, Model model){
+        log.info("==========bno: "+bno);
+        log.info("======listDTO: "+listDTO);
+
+        model.addAttribute("dto", boardService.getOne(bno));
+
+        return "/board/modify";
     }
 
     @GetMapping("/") //공백으로 놔도 됨.
@@ -47,7 +60,7 @@ public class BoardController {
                     // log.info("page : "+page);
 
         log.info(listDTO);
-        ListResponseDTO<BoardDTO> responseDTO = service.getList(listDTO);
+        ListResponseDTO<BoardDTO> responseDTO = boardService.getList(listDTO);
         //model.addAttribute("dtoList", responseDTO);
         model.addAttribute("dtoList", responseDTO.getDtoList());
         model.addAttribute("total", responseDTO.getTotal());
@@ -77,5 +90,52 @@ public class BoardController {
 
 
         return "redirect:/board/list";
+    }
+
+
+    //수정 페이지에서 삭제
+    @PostMapping("/remove/{bno}")
+    public String removePost(@PathVariable("bno") Integer bno, RedirectAttributes rttr){
+
+        log.info("--------------------remove: " + bno);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("--------------------------------------");
+
+        boardService.remove(bno);
+        rttr.addFlashAttribute("result", "removed");
+
+        return "redirect:/board/list";
+    }
+
+    //삭제 오류 메시지 -> 리스트로 보내기
+    @GetMapping({"/remove/{bno}"})
+    public String getNotSupported(@PathVariable("bno") Integer bno){
+        return "redirect:/board/list";
+    }
+
+
+    //수정 페이지에서 수정
+    @PostMapping("/modify/{bno}")
+    public String modifyPost(@PathVariable("bno") Integer bno, BoardDTO boardDTO, ListDTO listDTO ,RedirectAttributes rttr){
+
+        log.info("--------------------modify: " + boardDTO);
+        boardDTO.setBno(bno);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("---------------------수정!!-----------------");
+
+        boardService.update(boardDTO);
+
+        rttr.addFlashAttribute("result", "modified");
+
+        return "redirect:/board/read/"+bno+listDTO.getLink();
     }
 }
