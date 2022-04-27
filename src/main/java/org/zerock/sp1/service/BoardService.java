@@ -1,9 +1,11 @@
 package org.zerock.sp1.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.sp1.dto.BoardDTO;
 import org.zerock.sp1.dto.ListDTO;
 import org.zerock.sp1.dto.ListResponseDTO;
 
+@Transactional
 // 어떤 xml에 component-scan을 설정해야 하나... servlet은 servlet과 관련된 api를 사용하고 있는 지 파악...
 public interface BoardService {
 

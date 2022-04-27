@@ -99,7 +99,7 @@ public class BoardController {
 
         log.info("--------------------remove: " + bno);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -125,11 +125,6 @@ public class BoardController {
         log.info("--------------------modify: " + boardDTO);
         boardDTO.setBno(bno);
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         log.info("---------------------수정!!-----------------");
 
         boardService.update(boardDTO);

@@ -3,12 +3,16 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        https://www.springframework.org/schema/context/spring-context.xsd
        http://mybatis.org/schema/mybatis-spring
-       http://mybatis.org/schema/mybatis-spring.xsd">
+       http://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 <!--    <bean class="org.zerock.sp1.sample.SampleService">
         <property name="dao" ref="sampleDAO"></property>
@@ -20,6 +24,9 @@
     <context:component-scan base-package="org.zerock.sp1.store"/>
     <context:component-scan base-package="org.zerock.sp1.service"/>
     <context:component-scan base-package="org.zerock.sp1.config"/>
+    <context:component-scan base-package="org.zerock.sp1.aop"/>
+
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="driverClassName"
@@ -34,6 +41,13 @@
         <property name="dataSource" ref="dataSource"></property>
         <property name="mapperLocations" value="classpath:/mappers/**/*.xml"></property>
     </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <tx:annotation-driven></tx:annotation-driven>
 
     <!-- HikariCP configuration -->
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"

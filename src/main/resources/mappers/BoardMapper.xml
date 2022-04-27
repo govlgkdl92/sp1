@@ -37,7 +37,7 @@
     <!-- $ 사용하지 않기! SQL 인택션 공격에 위험하다!!!-->
 
     <select id="selectList" resultType="org.zerock.sp1.domain.Board">
-        select bno, title, content, writer, regDate, updateDate
+        select bno, title, content, writer, regDate, updateDate, replyCount
         from tbl_board
             <include refid="search"></include>
         order by bno desc
@@ -60,5 +60,10 @@
     <update id="update">
         update tbl_board set title = #{title}, content=#{content}, updateDate = now()
         where bno = #{bno}
+    </update>
+
+    <!-- 댓글 추가 시 목록에 댓글 수 표시 변화-->
+    <update id="updateReplyCount">
+        update tbl_board set replycount = replyCount + #{amount} where bno = #{bno}
     </update>
 </mapper>

@@ -22,6 +22,7 @@ public class BoardServiceImpl implements BoardService{
     private final BoardMapper boardMapper;
     private final ModelMapper modelMapper;
 
+    //리스트
     @Override
     public ListResponseDTO<BoardDTO> getList(ListDTO listDTO) {
         List<Board> boardList = boardMapper.selectList(listDTO);

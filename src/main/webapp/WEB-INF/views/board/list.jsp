@@ -28,6 +28,8 @@
             <%-- ↓ 예전 방식 --%>
            <%-- <span><a href='/board/read/${listDTO.link}&bno=${board.bno}'>${board.title}</a></span>--%>
             <span><c:out value="${board.writer}"/></span>
+            <c:if test="${board.replyCount != 0}">
+            <span><c:out value="[${board.replyCount}]"/></span></c:if>
         </li>
     </c:forEach>
 </ul>

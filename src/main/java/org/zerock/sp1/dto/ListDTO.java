@@ -19,6 +19,8 @@ public class ListDTO {
     private String type;
     private String keyword;
 
+    private int replyCount;
+
     public ListDTO(){
         this.page = 1;
         this.size = 10;
