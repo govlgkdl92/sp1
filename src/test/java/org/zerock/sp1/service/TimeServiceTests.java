@@ -20,6 +20,8 @@ public class TimeServiceTests {
     @Test
     public void testInsertAll(){
 
+
+
         log.info("----------------------------");
         log.info(timeService.toString());
         //com.sun.proxy.$Proxy54
@@ -29,7 +31,7 @@ public class TimeServiceTests {
                 "홍익인간 뜻으로 나라 세우니 대대손손 훌륭한 인물도 많아 " +
                 "고구려 세운 동명왕 백제 온조왕 알에서 나온 혁거세 " +
                 "만주벌판 달려라 광개토대왕 신라장군 이사부";
-        //timeService.insertAll(str);
+        timeService.insertAll(str);
 
         String title = "한국을 빛낸 백명의 위인";
         //timeService.insertAll(title);
