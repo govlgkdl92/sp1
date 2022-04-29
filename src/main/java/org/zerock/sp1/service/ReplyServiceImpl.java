@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.zerock.sp1.domain.Reply;
+import org.zerock.sp1.dto.ListDTO;
 import org.zerock.sp1.dto.ReplyDTO;
 import org.zerock.sp1.mapper.BoardMapper;
 import org.zerock.sp1.mapper.ReplyMapper;
@@ -23,8 +24,8 @@ public class ReplyServiceImpl implements ReplyService {
 
     //댓글 목록
     @Override
-    public List<ReplyDTO> getListOfBoard(Integer bno) {
-        List<Reply> replyList = replyMapper.selectListOfBoard(bno);
+    public List<ReplyDTO> getListOfBoard(Integer bno, ListDTO listDTO) {
+        List<Reply> replyList = replyMapper.selectListOfBoard(bno, listDTO);
 
         List<ReplyDTO> dtoList = replyList.stream().map(reply -> modelMapper.map(reply, ReplyDTO.class))
                 .collect(Collectors.toList());
@@ -34,7 +35,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     //댓글 추가
     @Override
-    public void register(ReplyDTO replyDTO) {
+    public int register(ReplyDTO replyDTO) {
         Reply reply = modelMapper.map(replyDTO, Reply.class);
         //사실은 그대로 넣어도 돼... 하지만 그냥 규칙을 지키자... 마이바티스에서는 엄격히 구분하니까....
 
@@ -42,5 +43,6 @@ public class ReplyServiceImpl implements ReplyService {
         boardMapper.updateReplyCount(replyDTO.getBno(), 1);
         //insert 가 안되면 전체 댓글 수 update 가 되면 안되므로 반드시 트랜잭션 처리를 해야 한다!!!!!
 
+        return replyMapper.selectTotalOfBoard(replyDTO.getBno());
     }
 }

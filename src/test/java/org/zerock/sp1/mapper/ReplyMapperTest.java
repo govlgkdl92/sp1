@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.zerock.sp1.dto.ListDTO;
 
 //Spring으로 테스트 하기 위한 세 줄
 @Log4j2
@@ -18,8 +19,13 @@ public class ReplyMapperTest {
 
     @Test
     public void testList1(){
-        Integer bno = 32757;
-        mapper.selectListOfBoard(bno).forEach(reply -> log.info(reply));
+        Integer bno = 32755;
+
+        ListDTO listDTO = new ListDTO();
+        listDTO.setPage(2);
+        listDTO.setSize(10);
+
+        mapper.selectListOfBoard(bno, listDTO).forEach(reply -> log.info(reply));
     }
 
 
