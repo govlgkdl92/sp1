@@ -11,4 +11,6 @@ public interface ReplyService {
 
     int register(ReplyDTO replyDTO);
 
+    void remove(Integer rno);
+
 }

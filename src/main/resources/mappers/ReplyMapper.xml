@@ -16,4 +16,10 @@
     <select id="selectTotalOfBoard" resultType="int">
         select count(rno) from tbl_reply where bno=#{bno} and rno>0
     </select>
+
+    <!-- 댓글 삭제 하기 -->
+    <update id="updateAsRemoved">
+        update tbl_reply set replyText ='DELETED', updateDate = now() where rno = #{rno}
+    </update>
+
 </mapper>

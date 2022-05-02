@@ -14,4 +14,8 @@ public interface TimeMapper {
 
     @Insert("insert into tbl_b (text) values (#{text})")
     void insertB(String text);
+
+    void updateAsRemoved(Integer rno);
+
+
 }

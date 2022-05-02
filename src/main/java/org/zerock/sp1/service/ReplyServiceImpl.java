@@ -45,4 +45,13 @@ public class ReplyServiceImpl implements ReplyService {
 
         return replyMapper.selectTotalOfBoard(replyDTO.getBno());
     }
+
+    
+    //댓글 삭제
+    @Override
+    public void remove(Integer rno) {
+
+        replyMapper.updateAsRemoved(rno);
+
+    }
 }

@@ -10,4 +10,6 @@ public interface ReplyMapper extends GenericMapper<Reply, Integer> {
     List<Reply> selectListOfBoard(@Param("bno") Integer bno, @Param("listDTO")ListDTO listDTO);
 
     int selectTotalOfBoard(Integer bno);
+
+    void updateAsRemoved(Integer rno);
 }

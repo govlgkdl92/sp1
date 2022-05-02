@@ -36,13 +36,19 @@ public class ReplyController {
     }
 
 
-    @GetMapping("/test")
+    @DeleteMapping("/{rno}")
+    public Map<String, String> remove(@PathVariable("rno") Integer rno){
+        replyService.remove(rno);
+        return Map.of("result", "success");
+    }
+
+   /* @GetMapping("/test")
     public String[] get1(){
         return new String[]{"aaa", "bbb", "ccc"};
     }
               // ↓ 좀 더 엄격한 코딩을 하자만 values,
               // produces : 생산 가능한 미디어 목록을 지정해서 주요 매핑을 제한
-              // MediaType.APPLICATION_JSON_VALUE -> json 타입만 만들어 낼 것이다!
+              // MediaType.APPLICATION_JSON_VALUE -> json 타입만 만들어 낼 것이다!*/
 
 
 }

@@ -30,7 +30,8 @@ public class BoardController {
 
         model.addAttribute("dto", boardService.getOne(bno));
 
-        return "/board/read";
+//      return "/board/read";
+        return "/board/read2";
     }
 
     @GetMapping( "/modify/{bno}")
