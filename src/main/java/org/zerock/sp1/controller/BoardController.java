@@ -6,12 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.sp1.dto.BoardDTO;
-import org.zerock.sp1.dto.ListDTO;
-import org.zerock.sp1.dto.ListResponseDTO;
-import org.zerock.sp1.dto.PageMaker;
+import org.zerock.sp1.dto.*;
 import org.zerock.sp1.service.BoardService;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Log4j2 // System.out.print 사용하지 말자. 이것만 사용안해도 성능이 10퍼는 좋아짐
@@ -80,15 +78,15 @@ public class BoardController {
 
     @PostMapping("/register")
     public String registerPOST(BoardDTO boardDTO, RedirectAttributes rttr){
-        log.info("post................");
+        log.info("등록 시....post................");
         log.info(boardDTO);
 
         /* 중요 !!!! */
         // rttr.addAllAttributes()  -> 계속 똑같이 문자열 만들어냄
         // rttr.addAttribute("num",321);
 
-        rttr.addFlashAttribute("result", 123);
-
+        //rttr.addFlashAttribute("result", 123);
+        boardService.register(boardDTO);
 
         return "redirect:/board/list";
     }

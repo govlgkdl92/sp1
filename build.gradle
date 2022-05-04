@@ -79,6 +79,9 @@ dependencies {
     // AspectJ Weaver / https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
     implementation 'org.aspectj:aspectjweaver:1.9.9.1'
 
+    // 썸네일 https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    implementation 'net.coobird:thumbnailator:0.4.17'
+
 
 }
 

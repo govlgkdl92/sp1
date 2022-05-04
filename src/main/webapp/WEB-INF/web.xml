@@ -26,8 +26,17 @@
             <param-value>true</param-value>
         </init-param>
 
-
         <load-on-startup>1</load-on-startup>
+
+        <!-- Tomcat 파일 업로드 처리를 위한 config -->
+        <multipart-config>
+            <location>D:\\upload\\temp</location> <!-- 첨부파일이 올라가는 폴더 -->
+            <max-file-size>20971520</max-file-size> <!--1MB * 20 파일 하나 최대 크기-->
+            <max-request-size>41943040</max-request-size><!-- 40MB 모든 파일 최대 크기-->
+            <file-size-threshold>20971520</file-size-threshold> <!-- 20MB  이 사이즈가 넘어가면 파일로 처리할거야-->
+        </multipart-config>
+        <!-- 조회하는 부분은 입출력으로 처리할 생각 -->
+
     </servlet>
 
     <servlet-mapping>

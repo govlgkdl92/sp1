@@ -17,6 +17,7 @@ ${dto}
     <input type="hidden" name="type" value="${listDTO.type}">
     <input type="hidden" name="keyword" value="${listDTO.keyword}">
 <div>
+
     <div>
         <input type="text" name="bno" value="<c:out value="${dto.bno}"/>" readonly>
     </div>

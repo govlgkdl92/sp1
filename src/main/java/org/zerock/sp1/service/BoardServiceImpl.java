@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.zerock.sp1.domain.AttachFile;
 import org.zerock.sp1.domain.Board;
 import org.zerock.sp1.dto.BoardDTO;
 import org.zerock.sp1.dto.ListDTO;
 import org.zerock.sp1.dto.ListResponseDTO;
 import org.zerock.sp1.mapper.BoardMapper;
+import org.zerock.sp1.mapper.FileMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardMapper boardMapper;
+    private final FileMapper fileMapper;
     private final ModelMapper modelMapper;
 
     //리스트
@@ -64,5 +67,20 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void remove(Integer bno) {
         boardMapper.delete(bno);
+    }
+
+    //등록
+    @Override
+    public void register(BoardDTO boardDTO) {
+        Board board = modelMapper.map(boardDTO, Board.class);
+
+        boardMapper.insert(board);
+
+        List<AttachFile> files = boardDTO.getUploads().stream().map(uploadResultDTO ->
+                modelMapper.map(uploadResultDTO, AttachFile.class)).collect(Collectors.toList());
+
+        log.info(files);
+
+        files.forEach(file -> fileMapper.insert(file));
     }
 }

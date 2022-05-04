@@ -34,9 +34,13 @@
     </c:forEach>
 </ul>
 
-${pageMaker}
+<a href='/board/register' style="list-style: none; text-decoration: none">글쓰기</a>
 
+<br><br>
+<%--
+${pageMaker}
 ${listDTO}
+--%>
 
 <style>
     .pagination{
@@ -49,14 +53,12 @@ ${listDTO}
 </style>
 
 <ul class="pagination">
-
     <li class="page-item disabled">
         <a class="page-link" href="${pageMaker.start-1}"><</a>
     </li>
     <c:forEach begin="${pageMaker.start}" end ="${pageMaker.end}" var="num">
     <li class="page-item"><a class="page-link" href="${num}">${num}</a></li>
     </c:forEach>
-
     <li class="page-item">
         <a class="page-link" href="${pageMaker.end+1}">></a>
     </li>
