@@ -8,6 +8,7 @@
 <h1><%= "Hello World!" %>
 </h1>
 <br/>
+<a href='/board/list' style="list-style: none; text-decoration: none">목록으로 돌아가기</a><br><br><br>
 <a href="hello-servlet">Hello Servlet</a>
 </body>
 </html>

@@ -25,4 +25,18 @@ public class SampleTests {
         log.info(sampleService);
     }
 
+
+    @Test
+    public void testLink(){
+        String mainImage;
+
+        mainImage = "/view?fileName=2022/05/06/s_8e502d39-c4ae-4afd-9e49-fc2c174c0974_공기살인.jpg";
+        // split은 쉬울 거 같긴 한데 중간에 s_가 들어가는 이름이 있으면 문제가 된다.
+
+        int idx = mainImage.indexOf("s_");
+        String first = mainImage.substring(0, mainImage.indexOf("s_")); /* 필요한 S_ 가 처음 나올 수 밖에 없으므로 substring으로 처리 */
+        String second = mainImage.substring(idx+2);
+
+        log.info(first+second);
+    }
 }

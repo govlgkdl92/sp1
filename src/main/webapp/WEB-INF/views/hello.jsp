@@ -31,7 +31,7 @@
 </head>
 
 <body id="page-top">
-
+<a href='/board/list' style="list-style: none; text-decoration: none">목록으로 돌아가기</a><br><br><br>
 <!-- Page Wrapper -->
 <div id="wrapper">
 

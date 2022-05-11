@@ -20,9 +20,26 @@
     <button class="searchBtn">Search</button>
 </div>
 
+<style>
+    .dtoList {
+        /*display: flex;*/
+        flex-wrap: wrap;
+    }
+
+
+    .dtoList {
+        width:20vm;
+        min-width: 250px;
+        border:black 1px solid;
+    }
+
+</style>
 <ul class="dtoList">
     <c:forEach items="${dtoList}" var="board">
         <li>
+            <c:if test="${board.mainImage != null}">
+                <img src='${board.mainImage}'>
+            </c:if>
             <span>${board.bno}</span>
             <span><a href='/board/read/${board.bno}' class="dtoLink"><c:out value="${board.title}"/></a></span>
             <%-- ↓ 예전 방식 --%>

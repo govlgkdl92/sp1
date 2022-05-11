@@ -18,6 +18,8 @@ public class FileServiceImpl implements FileService {
 
     //이미지 독립적인 DB 등록 시 사용
 
+ /*
+
     //파일 업로드
     @Override
     public void register(UploadResultDTO uploadResultDTO) {
@@ -33,4 +35,7 @@ public class FileServiceImpl implements FileService {
     public void remove(String uuid) {
         fileMapper.delete(uuid);
     }
+
+  */
+
 }

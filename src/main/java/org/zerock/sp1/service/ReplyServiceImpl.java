@@ -25,9 +25,11 @@ public class ReplyServiceImpl implements ReplyService {
     //댓글 목록
     @Override
     public List<ReplyDTO> getListOfBoard(Integer bno, ListDTO listDTO) {
+
         List<Reply> replyList = replyMapper.selectListOfBoard(bno, listDTO);
 
-        List<ReplyDTO> dtoList = replyList.stream().map(reply -> modelMapper.map(reply, ReplyDTO.class))
+        List<ReplyDTO> dtoList = replyList.stream()
+                .map(reply -> modelMapper.map(reply, ReplyDTO.class))
                 .collect(Collectors.toList());
 
         return dtoList;

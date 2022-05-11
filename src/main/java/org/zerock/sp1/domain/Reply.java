@@ -1,5 +1,6 @@
 package org.zerock.sp1.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -13,8 +14,10 @@ public class Reply {
     private Integer rno;
     private Integer bno;
     private String replyText;
-    private String replyer;
+    private String replier;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateDate;
 
 }

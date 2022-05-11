@@ -22,7 +22,7 @@ public class ReplyServiceTest {
 
         replyDTO.setBno(32755);
         replyDTO.setReplyText("댓글 서비스를 통한 댓글 추가 테스트 중");
-        replyDTO.setReplyer("이슬");
+        replyDTO.setReplier("이슬");
 
         replyService.register(replyDTO);
         

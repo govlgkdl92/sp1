@@ -6,19 +6,17 @@
 <mapper namespace="org.zerock.sp1.mapper.BoardMapper">
 
     <!-- 검색 조건 -->
-    <sql id ="search">
+    <sql id="search">
         <where>
             <if test="keyword != null">
-                <foreach collection="types" item="item" separator="or" open="(" close=")">
+                <foreach collection="types" item="item" separator=" OR " open="(" close=")">
                     <if test='item == "t"'>
                         title like concat('%', #{keyword}, '%')
                     </if>
-
                     <if test='item == "c"'>
                         content like concat('%', #{keyword}, '%')
                     </if>
-                    <if test='
-                    item == "w"'>
+                    <if test='item == "w"'>
                         writer like concat('%', #{keyword}, '%')
                     </if>
                 </foreach>
@@ -28,25 +26,26 @@
 
     <insert id="insert">
         <selectKey resultType="int" keyProperty="bno" order="AFTER">
-            <!-- Max 값을 쓰는 것은 위험! -->
             select last_insert_id()
         </selectKey>
-        insert into tbl_board( title, content ,writer)
-        values (#{title}, #{content}, #{writer})
+        insert into tbl_board (title, content, writer, mainImage)
+        values (#{title},#{content}, #{writer}, #{mainImage})
     </insert>
     <!-- $ 사용하지 않기! SQL 인택션 공격에 위험하다!!!-->
 
-    <select id="selectList" resultType="org.zerock.sp1.domain.Board">
-        select bno, title, content, writer, regDate, updateDate, replyCount
+    <select id="selectList"  resultType="org.zerock.sp1.domain.Board">
+        select bno,title,content,writer,regDate,updateDate,replyCount,mainImage
         from tbl_board
-            <include refid="search"></include>
+
+        <include refid="search"></include>
+
         order by bno desc
         limit #{skip},#{size}
     </select>
 
     <select id="getTotal" resultType="int">
         select count(bno) from tbl_board
-            <include refid="search"></include>
+        <include refid="search"></include>
     </select>
 
     <delete id="delete">
@@ -58,7 +57,8 @@
     </select>
 
     <update id="update">
-        update tbl_board set title = #{title}, content=#{content}, updateDate = now()
+        update tbl_board
+        set title = #{title}, content= #{content}, updateDate = now() , mainImage = #{mainImage}
         where bno = #{bno}
     </update>
 
@@ -66,4 +66,10 @@
     <update id="updateReplyCount">
         update tbl_board set replycount = replyCount + #{amount} where bno = #{bno}
     </update>
+
+    <!-- 파일 더보기 보이기 -->
+    <select id="selectFiles" resultType="org.zerock.sp1.domain.AttachFile">
+        select * from tbl_attach where bno = #{bno}
+    </select>
+
 </mapper>

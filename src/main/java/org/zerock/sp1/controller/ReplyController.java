@@ -8,7 +8,6 @@ import org.zerock.sp1.dto.ListDTO;
 import org.zerock.sp1.dto.ReplyDTO;
 import org.zerock.sp1.service.ReplyService;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,27 +19,37 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/")
-    public Map<String, Integer> registerReply(@RequestBody ReplyDTO replyDTO){
-        //log.info(replyDTO);
-        //log.info("-------댓글 등록 확인 -------");
+    public Map<String,Integer> register(@RequestBody ReplyDTO replyDTO){
+       // log.info("=========================");
+       // log.info(replyDTO);
 
         int totalCount = replyService.register(replyDTO);
         return Map.of("result", totalCount);
     }
 
-    @GetMapping(value = "/list/{bno}" , produces = MediaType.APPLICATION_JSON_VALUE )
+    @GetMapping(value = "/list/{bno}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReplyDTO> getListOfBoard(@PathVariable("bno") Integer bno, ListDTO listDTO){
-        log.info("reply list....... :"+listDTO);
+
+       // log.info("reply list.." + listDTO);
 
         return replyService.getListOfBoard(bno, listDTO);
     }
 
-
     @DeleteMapping("/{rno}")
     public Map<String, String> remove(@PathVariable("rno") Integer rno){
+
+        //log.info("=================================");
+
+        //log.info("remove..." + rno);
+
         replyService.remove(rno);
+
         return Map.of("result", "success");
     }
+
+
+
+}
 
    /* @GetMapping("/test")
     public String[] get1(){
@@ -51,4 +60,4 @@ public class ReplyController {
               // MediaType.APPLICATION_JSON_VALUE -> json 타입만 만들어 낼 것이다!*/
 
 
-}
+

@@ -6,13 +6,12 @@ const replyService = (function (){
     }
 
     const addReply = async function (replyObj, size, callback){
-        console.log("addReply...............")
-
+        //console.log("addReply............")
         const res = await axios.post("/replies/", replyObj)
-        console.log(res.data);
         const replyCount = parseInt(res.data.result)
-        console.log(replyCount);
-        console.log("-------------add")
+
+        //console.log("REPLY JS ")
+        //console.log(replyCountFn)
 
         //console.log(res.data)
         //1. addReply를 호출할 때마다 bno와 size를 받자
@@ -33,8 +32,9 @@ const replyService = (function (){
         callback({bno, page, size})
     }
 
+
     const getList = async function ({bno,page,size}, callback){
-        console.log("getList...............",bno,page,size )
+        //console.log("getList...............",bno,page,size )
         //this.page = page || 1; 이건 안되나
         const parameter = {page:page||1, size:size||10}
 
@@ -58,6 +58,7 @@ const qs = function (str){
 
 const qsAddEvent = function (selector, type, callback, tagName){
     const target = document.querySelector(selector)
+
     if(!tagName){
         target.addEventListener(type, callback, false)
         //제이쿼리는 타겟을 리턴함. 여기는 안해도 돼

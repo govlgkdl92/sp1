@@ -18,8 +18,7 @@ public class UploadResultDTO {
 
     public String getLink(){
         return savePath+"/"+uuid+"_"+fileName;
-    } //링크
-
+    }
     public String getThumbnail(){
         return savePath+"/s_"+uuid+"_"+fileName;
     }

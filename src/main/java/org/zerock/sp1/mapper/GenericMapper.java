@@ -9,10 +9,14 @@ import java.util.List;
 public interface GenericMapper <E, K>{
 
     void insert(E board);
-    List<E> selectList(ListDTO listDTO);
-                        //(@Param("skip") int skip, @Param("size")int size);
+
+    List<Board> selectList(ListDTO listDTO);
+
     int getTotal(ListDTO listDTO);
+
     void delete(K bno);
-    E selectOne(K bno);
+
+    Board selectOne(K bno);
+
     void update(E board);
 }

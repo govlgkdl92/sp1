@@ -7,10 +7,10 @@
 <body>
     <h1>Register Page</h1><a href='/board/list' style="list-style: none; text-decoration: none">목록으로 돌아가기</a><br><br><br>
 
-    <form class="actionForm" action="/board/register/" method="post">
-        제 목  <input type="text" name="title"><br><br>
-        작성자 <input type="text" name="writer"><br><br>
-        내 용  <input type="text" name="content">
+    <form class="actionForm" name="board" action="/board/register" method="post">
+        <label>제 목</label><input type="text" name="title"/><br><br>
+        <label>작성자</label><input type="text" name="writer" value="파일업로드"/><br><br>
+        <label>내 용</label><input type="text" name="content" value="파일업로드"/>
 
         <%-- 독립적인 DB 시 - 메인 이미지(섬네일) 들어가야 함--%>
 
@@ -22,7 +22,8 @@
         <input type="hidden" name="uploads[0].uuid" value="aaa">
 ````--%>
 
-        <button class="formBtn">등록하기</button>
+        <button type="button" class="formBtn">등록하기</button>
+        <div class="hiddenClass"></div>
     </form>
 
 <%-- 전통적인 파일 업로드 방식 --%>
@@ -67,7 +68,6 @@
     </style>
 
     <div class="uploadResult">
-
     </div>
 
 <%-- Axios --%>
@@ -84,81 +84,81 @@
         e.stopPropagation()
 
         const divArr = document.querySelectorAll(".uploadResult > div")
-
-        //divArr.map(divTag => {})
-
         let str = "";
-        for (let i = 0; i < divArr.length; i++) {
+
+        for(let i= 0;i < divArr.length; i++){
             const fileObj = divArr[i]
+
+            if(i === 0){
+                const mainImageLink = fileObj.querySelector("img").getAttribute("src")
+                str += `<input type='hidden' name='mainImage' value='\${mainImageLink}'>`
+            }
 
             const uuid = fileObj.getAttribute("data-uuid")
             const img = fileObj.getAttribute("data-img")
             const savePath = fileObj.getAttribute("data-savepath")
             const fileName = fileObj.getAttribute("data-filename")
 
-/*          const thumbnail = fileObj.getAttribute("data-thumbnail")
-            const link = fileObj.getAttribute("data-link")*/
-
             str += `<input type='hidden' name='uploads[\${i}].uuid' value='\${uuid}'>`
             str += `<input type='hidden' name='uploads[\${i}].img' value='\${img}'>`
             str += `<input type='hidden' name='uploads[\${i}].savePath' value='\${savePath}'>`
             str += `<input type='hidden' name='uploads[\${i}].fileName' value='\${fileName}'>`
-/*            str += `<input type='hidden' name='uploads[\${i}].thumbnail' value='\${thumbnail}'`
-            str += `<input type='hidden' name='uploads[\${i}].link' value='\${link}'`*/
+        }//for
 
-        }//end for
-            const actionForm = document.querySelector(".actionForm")
-            actionForm.innerHTML += str;
-            actionForm.submit();
-    })
+        const actionForm =  document.querySelector(".actionForm")
+        document.querySelector(".hiddenClass").innerHTML += str
+        //console.log("actionForm.innerHTML :" + actionForm.innerHTML)
+
+        actionForm.submit();
+
+
+    },false)
 
     uploadResult.addEventListener("click", (e) => {
+
         if(e.target.getAttribute("class").indexOf("delBtn") < 0){
             return
-        }   /* delBtn 버튼이 아니면 리턴 */
-
+        }
         const btn = e.target
         const link = btn.getAttribute("data-link")
 
         deleteToServer(link).then(result => {
             btn.closest("div").remove()
-            //div dom 삭제
         })
-        //axios 는 promise 반환...
+        //
+        // axios 는 promise 반환...
 
     },false)
 
-    document.querySelector(".uploadBtn").addEventListener("click", (e) => {
+
+
+    document.querySelector(".uploadBtn").addEventListener("click",(e)=> {
 
         const formObj = new FormData();
         const fileInput = document.querySelector(".uploadFile")
-
-        //console.log("fileInput.files",fileInput.files)
+        //console.log(fileInput.files)
 
         const files = fileInput.files
 
         for (let i = 0; i < files.length; i++) {
+            //console.log(files[i])
             formObj.append("files", files[i]);
             //console.log(files[i])
         }
                                 //resultArr 은 uploadResultDTO
-        uploadToServer(formObj).then(resultArr => {
+
                                             //구조 분해 할당 (리액트에서 할 개념)
                                             //안에 있는 배열의 변수를 한꺼번에 변수로 쪼갤 수 있다.
                                             //result -> {uuid,thumbnail,link,fileName} 이런식으로 해도 결과가 같음.
-
-            uploadResult.innerHTML += resultArr.map(({uuid,thumbnail,link,fileName, savePath, img}) =>
-                                `<div data-uuid="\${uuid}",data-filename="\${fileName}",
-                                        data-savepath="\${savePath}", data-img="\${img}"}>
-                                   <!-- data-link="\${link}" , data-thumbnail="\${thumbnail}"
-                                       data-"이름" 에 이름 부분은 반드시 소문자
-                                        -->
-                                <img src='/view?fileName=\${thumbnail}'>
-                                <button data-link="\${link}" class="delBtn">X</button>
-                                \${fileName}</div>`).join("</div><div>")
+        uploadToServer(formObj).then(resultArr => {
+            uploadResult.innerHTML += resultArr.map( ({uuid,thumbnail,link,fileName,savePath, img}) => `
+                <div data-uuid='\${uuid}' data-img='\${img}'  data-filename='\${fileName}'  data-savepath='\${savePath}'>
+                <img src='/view?fileName=\${thumbnail}'>
+                <button data-link='\${link}' class="delBtn">x</button>
+                \${fileName}</div>`).join(" ")
 
             fileInput.remove()
-            document.querySelector(".uploadInputDiv").appendChild(cloneInput.cloneNode())
+            document.querySelector(".uploadInputDiv").appendChild(cloneInput).cloneNode()
                                                                 //업로드 버튼을 눌렀을 때 그제서야 버튼을 찾기 때문에 이렇게 하는 게 가능
                                                                 //업로드 버튼을 누르면 dom 이 복구된 상태에서 찾기 때문에 읽을 수 있다.
         })
@@ -166,18 +166,25 @@
     },false)
 
 
+
+
     //업로드 된 이미지 삭제
     async function deleteToServer(fileName){
         //axios 의 장점은 기본이 다 json 처리다.
         const options = {headers: { "Content-Type": "application/x-www-form-urlencoded"}}
-        await axios.post("/delete", "fileName="+fileName, options) //
+
+        const res = await axios.post("/delete", "fileName="+fileName, options )
+
+        //console.log(res.data)
+
+        return res.data
 
     }
 
     //이미지 업로드
     async function uploadToServer (formObj) {
 
-        console.log("upload to server......")
+        //console.log("upload to server......")
         //console.log(formObj)
 
         const response = await axios({

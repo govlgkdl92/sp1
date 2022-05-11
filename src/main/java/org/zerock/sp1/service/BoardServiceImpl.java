@@ -9,6 +9,7 @@ import org.zerock.sp1.domain.Board;
 import org.zerock.sp1.dto.BoardDTO;
 import org.zerock.sp1.dto.ListDTO;
 import org.zerock.sp1.dto.ListResponseDTO;
+import org.zerock.sp1.dto.UploadResultDTO;
 import org.zerock.sp1.mapper.BoardMapper;
 import org.zerock.sp1.mapper.FileMapper;
 
@@ -54,12 +55,29 @@ public class BoardServiceImpl implements BoardService{
     //조회에서 수정
     @Override
     public void update(BoardDTO boardDTO) {
-        Board board = Board.builder()
-                            .bno(boardDTO.getBno())
-                            .title(boardDTO.getTitle())
-                            .content(boardDTO.getContent())
-                    .build();
-        boardMapper.update(board);
+
+        //log.info("--------------update________________");
+        //log.info("--------------update________________");
+        //log.info("--------------update________________");
+        //log.info(boardDTO);
+
+        //기존 파일 모두 삭제
+        fileMapper.delete(boardDTO.getBno());
+
+        boardMapper.update(Board.builder()
+                .bno(boardDTO.getBno())
+                .title(boardDTO.getTitle())
+                .content(boardDTO.getContent())
+                .mainImage(boardDTO.getMainImage())
+                .build());
+
+        for (UploadResultDTO uploadDTO : boardDTO.getUploads()) {
+
+            AttachFile attachFile = modelMapper.map(uploadDTO, AttachFile.class);
+            attachFile.setBno(boardDTO.getBno());
+
+            fileMapper.insertBoard(attachFile);
+        }
     }
 
 
@@ -74,13 +92,29 @@ public class BoardServiceImpl implements BoardService{
     public void register(BoardDTO boardDTO) {
         Board board = modelMapper.map(boardDTO, Board.class);
 
+        List<AttachFile> files =
+                boardDTO.getUploads().stream().map(uploadResultDTO -> modelMapper.map(uploadResultDTO, AttachFile.class)
+                ).collect(Collectors.toList());
+
+        //log.info("========================");
+        //log.info("========================");
+
+        //log.info(board);
+        //log.info(files);
+
         boardMapper.insert(board);
 
-        List<AttachFile> files = boardDTO.getUploads().stream().map(uploadResultDTO ->
-                modelMapper.map(uploadResultDTO, AttachFile.class)).collect(Collectors.toList());
-
-        log.info(files);
-
         files.forEach(file -> fileMapper.insert(file));
+
+        //log.info("========================");
+    }
+
+    //상세 조회시 여러 이미지 가져오기
+    @Override
+    public List<UploadResultDTO> getFiles(Integer bno) {
+        List<AttachFile> attachFiles = boardMapper.selectFiles(bno);
+
+        return attachFiles.stream().map(attachFile -> modelMapper.map(attachFile, UploadResultDTO.class))
+                .collect(Collectors.toList());
     }
 }

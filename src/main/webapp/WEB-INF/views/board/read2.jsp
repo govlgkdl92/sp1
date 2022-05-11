@@ -6,86 +6,138 @@
 </head>
 
 <body>
-<c:out value="${dto.title}"></c:out><br><br>
+<a href='/board/list' style="list-style: none; text-decoration: none">목록으로 돌아가기</a><br><br><br>
+<div>
+    <style>
+        .pictures {
+            max-width:80vw;
+        }
 
-<textarea readonly><c:out value="${dto.content}"></c:out></textarea>
+        .moreBtn {
+            color: darkslategray;
+        }
+    </style>
+
+    <button class="moreBtn">더보기</button>
+<div class="pictures">
+    <c:if test="${dto.mainImage != null}">
+        <img src="${dto.getMain()}">  <%-- 메소드 호출도 가능하다 --%>
+    </c:if>
+</div>
+
+</div>
+
+제목: <c:out value="${dto.title}"></c:out><br><br>
+
+작성자: <c:out value="${dto.writer}"></c:out><br><br>
+
+내용: <c:out value="${dto.content}"></c:out>
 <br><br>
+
+
+<hr>
+<div>
+    <div>
+        <input type="text" name="replyText" value="샘플 댓글">
+    </div>
+    <div>
+        <input type="text" name="replier" value="testUser">
+    </div>
+    <div>
+        <button class="addReplyBtn">댓글 추가</button>
+    </div>
+</div>
+<br><br>
+<hr>
+
+
+<div>
+    <h3>댓글 수정 모달 </h3>
+    <div>
+        <input type="text" name="modReplyText" >
+    </div>
+    <div>
+        <input type="text" name="modReplier" readonly>
+    </div>
+    <div>
+        <button class="modReplyBtn">댓글 수정</button>
+        <button class="removeReplyBtn">댓글 삭제</button>
+    </div>
+</div>
+
+<hr>
 
 <ul class="replyUL"><%-- 댓글 --%>
 </ul>
 <ul class="pageUL"><%-- 댓글 페이징 --%>
 </ul>
 
-<div>
-    <div>
-        내용 <input type="text" name="replyText" value="지금은 테스트..">
-    </div>
-    <div>
-        작성자 <input type="text" name="replyer" value="hello">
-    </div>
-    <div>
-        <button class="addReplyBtn">등록</button>
-    </div>
-</div>
-<br><br>
-<div>
-    <h3>댓글 수정 모달</h3>
-    <div>
-        내  용 <input type="text" name="modReplyText">
-    </div>
-    <div>
-        작성자 <input type="text" name="modReplyer" readonly>
-    </div>
-    <div>
-        <button class="modReplyBtn">수정</button>
-        <button class="removeReplyBtn">삭제</button>
-    </div>
-</div>
-
 <%-- Axios --%>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 <script>
+    /* 실패하는 부분 고려하려면 catch 문 사용하면 된다. then().catch() */
+    document.querySelector(".moreBtn").addEventListener("click", (e) => {
 
+        axios.get("/board/files/${dto.bno}").then(
+            res => {
+                console.log(res.data)
+                const arr = res.data
+                let str= ""
+                for(let i= 0;i < arr.length; i++){
+                    str += `<img src='/view?fileName=\${arr[i].link}'>`
+                }
+                console.log(str)
+                document.querySelector(".pictures").innerHTML = str
+            }
+        )
 
+    }, false)
+
+</script>
+<script>
 //--------------------------------------------------------------------
     let initState = {
-        bno : ${dto.bno},
-        replyArr : [],
-        replyCount : 0,
-        size : 10,
-        pageNum : 1
+        bno: ${dto.bno},
+        replyArr:[],
+        replyCount:0,
+        size:10,
+        pageNum:1
     }
 
     const replyUL = document.querySelector(".replyUL")
     const pageUL = document.querySelector(".pageUL")
 
-    pageUL.addEventListener("click", (e) => {
+    pageUL.addEventListener("click",(e) => {
         if(e.target.tagName != 'LI'){
             return
         }
         const dataNum = parseInt(e.target.getAttribute("data-num"))
         replyService.setState({pageNum:dataNum})
+
     }, false)
 
-    document.querySelector(".addReplyBtn").addEventListener("click", (e) => {
+    document.querySelector(".addReplyBtn").addEventListener("click",(e)=> {
+
         const replyObj = {
             bno: ${dto.bno},
             replyText: document.querySelector("input[name='replyText']").value,
-            replyer:document.querySelector("input[name='replyer']").value
+            replier:document.querySelector("input[name='replier']").value
         }
 
         replyService.addServerReply(replyObj)
 
-    },false)
+    }, false)
 
     const modReplyTextInput = document.querySelector("input[name='modReplyText']")
-    const modReplyerInput = document.querySelector("input[name='modReplyer']")
+    const modReplierInput = document.querySelector("input[name='modReplier']")
     const removeReplyBtn = document.querySelector(".removeReplyBtn")
+
 
     let targetLi;
 
+
     replyUL.addEventListener("click", (e) => {
+
         if(!e.target.getAttribute("data-rno")){
             return;
         }
@@ -95,47 +147,52 @@
 
         const replyObj = replyService.findReply(rno)
         modReplyTextInput.value = replyObj.replyText
-        modReplyerInput.value = replyObj.replyer
+        modReplierInput.value = replyObj.replier
         removeReplyBtn.setAttribute("data-rno", rno)
 
-    },false)
+    }, false)
 
     removeReplyBtn.addEventListener("click", (e) => {
+
         const rno = parseInt(e.target.getAttribute("data-rno"))
 
         replyService.removeServer(rno).then(result => {
-            console.log(targetLi)
-            targetLi.innerHTML = "삭제된 댓글입니다."
+           //console.log(targetLi)
+            targetLi.innerHTML ="DELETED"
         })
+
     }, false)
 
+
     function render(obj){
+
+        //console.log("render................")
         //console.dir(obj)
-        //console.log("render.....")
 
         function printList(){
             const arr = obj.replyArr
+
             replyUL.innerHTML = arr.map(reply =>
                                 <!-- 빽틱 을 쓰면 줄바꿈을 해도 계속 유지가 된다. -->
-                                `<li>
-                                    <div>\${reply.replyer}||
-                                          \${reply.replyText}
-                                        <button data-rno=\${reply.rno} class='modBtn'>수정
-                                        </button>
-                                    </div>
-                                 </li>`).join(" ")
+                                `<li>\${reply.rno} ||
+                                    <div> \${reply.replyText}</div>
+                                    <button data-rno=\${reply.rno} class='modBtn'>수정</button>
+                                </li>`).join(" ")
         }
 
         function printPage(){
+
             const currentPage = obj.pageNum
             const size = obj.size
 
-            let endPage = Math.ceil(currentPage/10)*10
-            const startPage = endPage-9;
+            let endPage = Math.ceil(currentPage/10) * 10
+            const startPage = endPage - 9
 
             //이전 페이지 startPage가 1이 아니면 보이기
             const prev = startPage != 1
+
             endPage = obj.replyCount < endPage * obj.size? Math.ceil(obj.replyCount/obj.size) : endPage
+
 
             //다음 페이지
             //endPage * obj.size가 replyCount 보다 크다면 다음페이지 존재
@@ -174,18 +231,21 @@
     //})
 
     //오늘은 그냥 객체로
-    const replyService = (function (initState, callbackFn){
+    const replyService = (function(initState, callbackFn){
+
         let state = initState
         const callback = callbackFn
 
         const setState = (newState)=> {
-            state = {...state, ...newState} //전개연산자를 이용하여 스테이트 상태값을 변경시키기
+            state = {...state, ...newState}
+           // console.log(state)
+            //전개연산자를 이용하여 스테이트 상태값을 변경시키기
 
             //여기서 비동기를 들어가서 자동으로 바뀌도록 하자!
             //console.log(state)
 
             //newState 안에 replyCount 값 속성이나 pageNum 속성이 있다면!
-            if(newState.replyCount || newState.pageNum ){
+            if(newState.replyCount || newState.pageNum){
                 //서버의 데이터를 가져와야만 한다
                 getServerList(newState)
             }
@@ -207,7 +267,7 @@
 
             const paramObj = {page:pageNum, size:state.size}
             const res = await axios.get(`/replies/list/\${state.bno}`, {params: paramObj})
-            console.log(res.data)
+            //console.log(res.data)
 
             //pageNum setState의 넘기면 안돼...
 
@@ -234,11 +294,14 @@
         }
 
         async function removeServer(rno){
-            const res = await axios.delete(`/replies/\${rno}`);
+
+            const res = await axios.delete(`/replies/\${rno}`)
 
             //success
             const result = res.data.result
+
             return result
+
         }
 
         return {setState, addServerReply, findReply ,removeServer}

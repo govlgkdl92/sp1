@@ -1,6 +1,7 @@
 package org.zerock.sp1.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.zerock.sp1.domain.AttachFile;
 import org.zerock.sp1.domain.Board;
 import org.zerock.sp1.dto.ListDTO;
 
@@ -8,7 +9,9 @@ import java.util.List;
 
 public interface BoardMapper extends GenericMapper<Board, Integer>{
 
-    void updateReplyCount(@Param("bno") Integer bno, @Param("amount") int amount);
+    void updateReplyCount(@Param("bno") Integer bno, @Param("amount")  int amount);
+
+    List<AttachFile> selectFiles(Integer bno);
 
     //void insert(Board board); //보드 인서트
     //void delete(Integer bno); //보드 삭제

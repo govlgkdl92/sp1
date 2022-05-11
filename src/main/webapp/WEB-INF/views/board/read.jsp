@@ -50,7 +50,7 @@ ${dto}--%>
         내용 <input type="text" name="replyText" value="지금은 테스트..">
     </div>
     <div>
-        작성자 <input type="text" name="replyer" value="hello">
+        작성자 <input type="text" name="replier" value="hello">
     </div>
     <div>
         <button class="addReplyBtn">등록</button>
@@ -137,7 +137,7 @@ ${dto}--%>
 
     function getServerList(param) {
         replyService.getList(param, (replyArr) => {
-               const liArr = replyArr.map(reply => `<li>\${reply.replyer} || \${reply.replyText}</li>`)
+               const liArr = replyArr.map(reply => `<li>\${reply.replier} || \${reply.replyText}</li>`)
                replyUL.innerHTML = liArr.join(" ")
                printPage(param.page)
         })
@@ -148,7 +148,7 @@ ${dto}--%>
         replyService.addReply(
                 {bno:bno,
                 replyText:qs("input[name='replyText']").value,
-                replyer:qs("input[name='replyer']").value },
+                    replier:qs("input[name='replier']").value },
             pageSize,
             (param) => {
                 // alert("댓글이 등록되었습니다.")

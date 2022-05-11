@@ -30,15 +30,15 @@ public class UploadController {
     //이미지 보이기
     @GetMapping("/view")  //  /{fileName:.+}
     public ResponseEntity<byte[]> viewFile(String fileName){  //@PathVariable("fileName")
-        log.info("--------------------: "+fileName);
+        //log.info("--------------------: "+fileName);
 
         File targetFile = new File("D:\\upload\\temp\\"+fileName);
 
         try {
             String mimeType = Files.probeContentType(targetFile.toPath());
 
-            log.info("========================");
-            log.info(mimeType);
+            //log.info("========================");
+            //log.info(mimeType);
 
             byte[] data = FileCopyUtils.copyToByteArray(targetFile);
 
@@ -68,7 +68,7 @@ public class UploadController {
                        // 업로드 되는 파일 이름
             String originalFileName = file.getOriginalFilename();
 
-            log.info("type: "+file.getContentType());
+            //log.info("type: "+file.getContentType());
             //썸네일을 위해 이미지를 걸려야 하는데.. 만약 이미지 타입이라면 썸네일을 만들어야 하니까!
             //이미지 거르기 방법1 mine 타입으로 확인해볼 수 있는 방법
             boolean img = file.getContentType().startsWith("image"); //이미지 여부
@@ -85,16 +85,13 @@ public class UploadController {
 
             // 서버까지 파일 업로드가 된 상태... 이제 저장을 해야하는데!
             try (InputStream in = file.getInputStream();
-                 FileOutputStream fos =
-                         new FileOutputStream(saveFile);
-            ) {
+                 FileOutputStream fos = new FileOutputStream(saveFile);
+            ){
                 FileCopyUtils.copy(in, fos);
-
-                //이미지 거르기 방법2
-                //Files.probeContentType();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
 
             if(img){
                 //saveName == UUID + "_" + fileName
@@ -113,8 +110,8 @@ public class UploadController {
             UploadResultDTO uploadResultDTO = UploadResultDTO.builder()
                     .fileName(originalFileName)
                     .uuid(uuid)
-                    .savePath(saveFolder)
                     .img(img)
+                    .savePath(saveFolder)
                     .build();
 
             list.add(uploadResultDTO);
@@ -146,11 +143,12 @@ public class UploadController {
     //폴더의 경로 만들어주기 // 폴더가 있었으면 안만들어진다 기본에 있던 폴더로 들어감
     private String makeFolders(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        String str = sdf.format(new Date()); //new Date 나는 java.util 에 있는 것으로 사용한다.
+        String str = sdf.format(new java.util.Date()); //new Date 나는 java.util 에 있는 것으로 사용한다.
 
         File folderPath = new File("D:\\upload\\temp\\"+str);
 
-        if(!folderPath.exists()){ //이 경로가 존재하지 않는다면?
+        //이 경로가 존재하지 않는다면?
+        if(!folderPath.exists()){
             folderPath.mkdirs();
         }
 
@@ -166,21 +164,21 @@ public class UploadController {
         int idx = fileName.lastIndexOf("/");
         String path = fileName.substring(0, idx); //경로
         String name = fileName.substring(idx+1); //삭제할 파일 이름
+        //name -> uuid_fileName 상태 _ 앞에 uuid만 가져오기
+        String uuid = name.substring(0,name.indexOf("_"));
 
-        log.info("path: "+path);
-        log.info("name: "+name);
+        //log.info("path: "+path);
+        //log.info("name: "+name);
 
         File targetFile = new File("D:\\upload\\temp\\"+fileName);
         boolean result = targetFile.delete();
+
         //원본 파일 삭제 후 삭제 성공하면 섬네일 삭제하기
         if(result){
             File thumbFile = new File("D:\\upload\\temp\\"+path+"\\s_"+name);
             thumbFile.delete();
         }
 
-        //name -> uuid_fileName 상태 _ 앞에 uuid만 가져오기
-        String uuid = name.substring(0,name.indexOf("_"));
-        
         //독립적인 DB등록 방법
         //fileService.remove(uuid);
 
